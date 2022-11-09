@@ -1,0 +1,181 @@
+Step 1: Create a .gitignore file, make a commit for only .gitignore and push!
+Always include a .gitignore file in the top level directory of your project
+
+.gitignore
+node_modules/
+.DS_Store // only include this if you are on a Mac
+dist/
+
+$ git add .gitignore
+$ git commit -m "add .gitignore file to project"
+$ git push origin main
+
+Step 2: "This automatically creates a file called package.json in our project's root directory."
+
+$ npm init -y
+
+Step 3: Install webpack!
+
+$ npm install webpack@4.46.0 --save-dev --save-exact
+
+Step 4: Install package to have access to the command line interface for webpack!
+
+$ npm install webpack-cli@3.3.12 --save-dev
+
+Step 5: Make sure package.json "scripts" has build: webpack in it
+
+"scripts": {
+"build": "webpack --mode=development"
+},
+
+Step 6: Invoke build in terminal. This will run webpack and bundle our code!
+
+$ npm run build
+
+Step 7: Create a file called webpack.config.js in the root of your project directory!
+
+webpack.config.js
+
+Add the following to webpack.config.js:
+
+const path = require('path');
+
+module.exports = {
+entry: './src/index.js',
+output: {
+filename: 'bundle.js',
+path: path.resolve(__dirname, 'dist')
+}
+};
+
+Step 8: Install two new dependencies with npm (BUNDLING CSS)
+
+$ npm install style-loader@1.3.0 css-loader@3.6.0 --save-dev
+
+Step 9: Update webpack.config.js
+
+const path = require('path');
+
+module.exports = {
+entry: './src/index.js',
+output: {
+filename: 'bundle.js',
+path: path.resolve(__dirname, 'dist')
+},
+module: {
+rules: [
+{
+test: /\.css$/,
+use: [
+'style-loader',
+'css-loader'
+]
+}
+]
+}
+};
+
+Step 10: Add css/styles to our src/index.js so it is available for webpack to bundle
+
+import './css/styles.css';
+
+Step 11: Install html-webpack-plugin
+
+$ npm install html-webpack-plugin@4.5.2 --save-dev
+
+Step 12: Update webpack.config.js
+
+webpack.config.js
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+entry: './src/index.js',
+output: {
+filename: 'bundle.js',
+path: path.resolve(__dirname, 'dist')
+},
+plugins: [
+new HtmlWebpackPlugin({
+title: 'Shape Tracker',
+template: './src/index.html',
+inject: 'body'
+})
+],
+module: {
+rules: [
+{
+test: /\.css$/,
+use: [
+'style-loader',
+'css-loader'
+]
+}
+]
+}
+};
+
+Step 13: Make sure Html does not have link, or script tags in head.
+
+    src/index.html
+
+    <head>
+        <title>Shape Tracker</title>
+    </head>
+    ...
+
+Step 14: Npm run build. The webpack will add index.html to our dist folder and add a script tag to the bottom of our html file.
+
+    $ npm run build
+
+Step 15: This will clear files inside of our dist folder before adding new ones each time we run $ npm run build 
+
+    $ npm install clean-webpack-plugin@3.0.0 --save-dev
+
+Step 16: Install webpack development server with npm 
+
+    $ npm install webpack-dev-server@3.11.3 --save-dev --save-exact
+
+Step 17: Update package.json with new script start tag. When you run $ npm run start, you will start the development server
+
+    "scripts": {
+        "build": "webpack --mode=development",
+        "start": "npm run build && webpack-dev-server --open --mode=development",
+    },
+
+Step 18: Install eslint
+
+    $ npm install eslint@8.18.0 --save-dev
+    $ npm install eslint-webpack-plugin@2.7.0 --save-dev
+
+Step 19: Install bootstrap
+
+    npm install bootstrap@4.5.3
+
+Step 20: Install Jest
+
+    $ npm install jest@24.9.0 --save-dev
+
+Step 21: Update package.json 
+
+    "scripts": {
+        "build": "webpack --mode=development",
+        "start": "npm run build && webpack-dev-server --open --mode=development",
+        "lint": "eslint src/*.js",
+        "test": "jest" 
+    }
+
+Step 22: Install Babel
+
+    $ npm install @babel/core@7.18.6 --save-dev
+    $ npm install @babel/plugin-transform-modules-commonjs@7.18.6 --save-dev
+
+Step 23: Create a .babelrc file and add the following:
+
+    {
+        "env": {
+        "test": {
+            "plugins": ["@babel/plugin-transform-modules-commonjs"]
+        }
+        }
+    }
